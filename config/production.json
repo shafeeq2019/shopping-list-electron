@@ -1,6 +1,6 @@
 {
   "dbConfig": {
-      "host": "localhost",
+      "host": "server",
       "port": 5984,
       "dbName": "shopping_list"
     }

@@ -4,9 +4,24 @@ const url = require("url");
 
 const { app, BrowserWindow, Menu, ipcMain } = electron;
 
-require('electron-reload')(__dirname, {
-  electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+require("electron-reload")(__dirname, {
+  electron: path.join(__dirname, "node_modules", ".bin", "electron"),
 });
+
+if (app.isPackaged) {
+  process.env.NODE_ENV = "production";
+}
+
+if (process.argv[2] && !app.isPackaged) {
+  process.env.NODE_ENV = process.argv[2];
+}
+
+const config = require("electron-node-config");
+
+if (config.has("dbConfig")) {
+  let dbConfig = config.get("dbConfig");
+  //...
+}
 
 let mainWindow;
 let addWindow;
@@ -38,7 +53,7 @@ app.on("ready", function () {
   Menu.setApplicationMenu(mainMenu);
 
   mainWindow.webContents.on("did-finish-load", () => {
-    mainWindow.webContents.send("item:test", config.credit.initialLimit);
+    mainWindow.webContents.send("item:test", config);
   });
 });
 
@@ -119,9 +134,3 @@ if (process.env.NODE_ENV !== "production") {
     ],
   });
 }
-
-let config = require("electron-node-config");
-let dbConfig = config.dbConfig;
-
-console.log(dbConfig);
-console.log(config);
