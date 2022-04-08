@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Shopping List</title>
+  </head>
+  <body>
+    <h1>Shopping List</h1>
+    <ul>
+
+    </ul>
+    <script type="text/javascript">
+    const electron = require('electron');
+    const {ipcRenderer} = electron;
+    const ul = document.querySelector('ul');
+    //add items
+    ipcRenderer.on('item:add', function(e, item) {
+      var node = document.createElement("li");
+      var textnode = document.createTextNode(item);
+      node.appendChild(textnode);
+      ul.appendChild(node);
+    })
+
+    //clear items
+    ipcRenderer.on('item:clear', function(e, item) {
+      ul.innerHTML = '';
+    })
+
+    // delete item
+    ul.addEventListener('dblclick', removeItem);
+
+    function removeItem(e) {
+      event.target.remove();
+      if(ul.children.length == 0){
+        ul.className = '';
+      }
+    }
+
+
+    //test
+    ipcRenderer.on('item:test', function(event, item) {
+      console.log(item)
+    })
+
+    </script>
+  </body>
+</html>
